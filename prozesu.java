@@ -1,3 +1,5 @@
+package si;
+
 import java.util.*;
 
 import java.util.Vector;          // java.util.* eta java.io.* ordez
@@ -7,10 +9,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
+import java.util.Enumeration;
 
 
 public class prozesu {
-
+public prozesu(){};
         public static final String FITXATEGI_AMAIERA=null;
         public static void main(String[] args)
             throws FileNotFoundException, IOException
@@ -25,9 +28,9 @@ public class prozesu {
 
 	for (int i=50;i<56;i++)  {
 		Artikulua artikulua=
-              (Artikulua)Bezeroak.BiltegiArtikuluak.elementAt(i-49);            
+                (Artikulua)Bezeroak.BiltegiArtikuluak.elementAt(i-49);            
 		Osagaia osagaia = new Osagaia(artikulua,i);
-		osagaia.ikuskatu();
+		//osagaia.ikuskatu();
                 Bezeroak.gehituOsagaia(osagaia);
 		}
 
@@ -51,7 +54,7 @@ public class prozesu {
             for (int i=0;i<Bezeroak.BiltegiBezeroak.size();i++)
               ((Bezeroa)Bezeroak.BiltegiBezeroak.elementAt(i)).ikuskatu();
 		
-	// Bezero bat bilatu bere izena erabilita
+	// Bezero bat bilatu bere NANa erabilita
             BufferedReader f=new BufferedReader(
                     new InputStreamReader(System.in));
             System.out.print("Emaidazu bezeroaren NAN-a: ");
@@ -83,7 +86,6 @@ public class prozesu {
 		       st.nextToken(),
 		       st.nextToken(),
                        Float.valueOf(st.nextToken()).floatValue());
-		bezeroa.ikuskatu();
                 Bezeroak.gehituBezeroa(bezeroa);
             }
         }
@@ -106,7 +108,7 @@ static void kargatuHornitzaileak()
 		       st.nextToken(),
 		       st.nextToken(),
                        st.nextToken());
-		hornitzailea.ikuskatu();
+		//hornitzailea.ikuskatu();
                 Bezeroak.gehituHornitzailea(hornitzailea);
             }
         }
@@ -131,7 +133,7 @@ static void kargatuArtikuluak()
 		       Float.valueOf(st.nextToken()).floatValue(),
 		       hornitzailea);
                        
-		artikulua.ikuskatu();
+		//artikulua.ikuskatu();
                 Bezeroak.gehituArtikulua(artikulua);
             }
         }
@@ -195,18 +197,55 @@ class Bezeroak {
 	
 
 	public static Bezeroa bilatuBezeroa(String nan) {
-          for (int i=0;i<BiltegiBezeroak.size();i++)
-             if(((Bezeroa)(BiltegiBezeroak.elementAt(i))).lortunan().equals(nan))
-               return (Bezeroa)(BiltegiBezeroak.elementAt(i));
-          return null;
-        }
-
+           
+            //3 eta 4 kasuen tratamendua
+            if(nan == null){
+                System.out.println("Nan-a ezin da null izan");
+                return null;
+            }
+            //1 eta 2 kasuen tratamendua
+            else if("".equals(nan)){
+                System.out.println("Nan-a ezin hutsik egon");
+                return null;
+            }
+            //6 kasuaren tratamendua
+            else if(nan.length() < 8){
+                System.out.println("Nan-ak ezin ditu 8 digitu baino gutxiago eduki");
+                return null;
+            }
+            //7 kasuaren tratamendua
+            else if(nan.length() > 8){
+                System.out.println("Nan-ak ezin ditu 8 digitu baino gehiago eduki");
+                return null;
+            }
+            //8 eta 9 kasuen tratamendua
+            else {
+                try  {  
+                    double d = Double.parseDouble(nan);  
+                    }  
+                    catch(NumberFormatException nfe)  
+                    {  
+                    System.out.println("Nan-ak ezin ditu karaktererik eduki");
+                    return null;  
+                    }  
+            }
+            //10 eta 11 kasuen tratamendua
+            for (int i=0;i<BiltegiBezeroak.size();i++)
+                if(((Bezeroa)(BiltegiBezeroak.elementAt(i))).lortunan().equals(nan)){
+                    System.out.println("Bezeroa sisteman aurkitu da");
+                    return (Bezeroa)(BiltegiBezeroak.elementAt(i));
+                }else {
+                    System.out.println("Ez da sisteman nan hori duen bezerorik aurkitu");
+                    return null;
+                }          
+            return null;
+          }
    }
 
    //=================================================================
 
 
-class Bezeroa {
+  class Bezeroa {
 	
 	private String nan;
 	private String Izena;
@@ -215,7 +254,9 @@ class Bezeroa {
 	private float kreditua;
 
 	private Eskaera[] eskaerak = new Eskaera[20];
-
+        public String getName(){
+            return Izena;
+        }
 	Bezeroa(String nanB, String izenaB,String helbiB,String telB, float kredB)
 		{  
 		  this.nan = nanB;
@@ -263,8 +304,35 @@ class Bezeroa {
 	}
 
 	/** Gorde bezeroaren Telefonoa */
-	public void gordeTelefonoa(String Telefonoa) {
-		this.Telefonoa = Telefonoa;
+	public boolean gordeTelefonoa(String Telefonoa) {
+                if ("".equals(Telefonoa)){
+                    System.out.println("Telefonoa hutsik dago.");
+                    return false;
+                }
+                else if (Telefonoa == null){
+                    System.out.println("Telefonoa ezin da null izan.");
+                    return false;
+                }
+                else if (Telefonoa.length() < 9){
+                    System.out.println("Telefonoak ezin ditu 9 zenbaki baino gutxiago eduki.");
+                    return false;
+                }
+                else if (Telefonoa.length() > 9){
+                    System.out.println("Telefonoak ezin ditu 9 zenbaki baino gehiago eduki.");
+                    return false;
+                }
+                else {
+                    try  {  
+                        double d = Double.parseDouble(Telefonoa);  
+                    }  
+                    catch(NumberFormatException nfe) {  
+                        System.out.println("Telefonoak ezin ditu karaktereak eduki");
+                        return false;  
+                    }  
+                }
+                this.Telefonoa = Telefonoa;
+                System.out.println("Telefonoa ondo gorde da.");
+                return true;
 	}
 
 	/** Eskuratu bezeroaren kreditua */
@@ -310,22 +378,30 @@ class Bezeroa {
 	*   null itzultzen du. 
 	*/
 	public Eskaera lortuEskaera(String izena) {
-		if (eskaerak == null) return null;
+                if ("".equals(izena)){
+                    System.out.println("Izena hutsik dago.");
+                    return null;
+                }
+                else {
 		Eskaera temp_Eskaera;
 		for (int i = 1; i < eskaerak.length; i++) {
 			if (eskaerak[i] != null && eskaerak[i].hartzaile.Izena.equals(izena)) {
 				temp_Eskaera = eskaerak[i];
 				eskaerak[i] = null;
+                                System.out.println(temp_Eskaera);
 				return temp_Eskaera;
 			}
 		}
+                System.out.println("Bezero horrek ez du inongo eskaerarik.");
 		return null;
+                }
 	}
 
 	/** Eskuratu bezeroaren Eskaera bat hartzailearen arabera. 
 	*    Ez badu bilatzen null itzultzen du. 
 	*/
 	public Eskaera lortuEskaera(Bezeroa hartzaile) {
+            
 		if (eskaerak == null) return null;
 		Eskaera temp_Eskaera;
 		for (int i = 1; i < eskaerak.length; i++) {
@@ -341,6 +417,7 @@ class Bezeroa {
 	*    Ez badu bilatzen null itzultzen du. 
 	*/
 	public Eskaera[] lortuEskaerak(String izena) {
+                
 		if (eskaerak == null) return null;
 		Eskaera[] temp_eskaerak = new Eskaera[eskaerak.length];
 		int j = 0;
@@ -355,6 +432,8 @@ class Bezeroa {
 
 	/** Eskuratu hartzaile batek jasoko dituen Eskaerak. */
 	public Eskaera[] lortuEskaerak(Bezeroa hartzaile) {
+               
+               
 		if (eskaerak == null) return null;
 		Eskaera[] temp_eskaerak = new Eskaera[eskaerak.length];
 		int j = 0;
@@ -390,9 +469,20 @@ class Eskaera {
 
 	Eskaera(Bezeroa harE, Osagaia[] osaE) {
 		this.hartzaile= harE;
-		System.out.println("ESKAERA SORTUTA DAGO !!!!!!!! \n \n \n");
+		//System.out.println("ESKAERA SORTUTA DAGO !!!!!!!! \n \n \n");
 		this.osagaiak = osaE;
 		}
+
+public String toString(){
+    String g="- ";
+    int i = 0;
+    while(i<osagaiak.length){
+        if(osagaiak[i]!=null){    g+=osagaiak[i]+" ";
+}
+        i++;
+    }
+    return this.hartzaile.getName() + " " + g ;
+}
 }
 
 class Osagaia {
@@ -410,7 +500,9 @@ public void ikuskatu()
 	    osagaia.ikuskatu();
         System.out.println("Eskatutako KOPURUA = "+this.kopurua+"\n");    
         }
-
+public String toString(){
+    return osagaia .izena + "  -> Eskatutako KOPURUA = "+this.kopurua+"\n";
+}
 }
 
 class Artikulua {
